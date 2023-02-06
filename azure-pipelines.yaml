@@ -1,0 +1,24 @@
+---
+pool:
+  name: "Azure Pipelines"
+  vmImage: "ubuntu-latest"
+
+trigger:
+  - master
+
+schedules:
+  - cron: "0 21 * * 1-5"
+    displayName: “At 21:00 on every day-of-week from Monday through Friday”
+    branches:
+      include:
+        - master
+    always: no
+
+steps:
+  - task: Maven@3
+    displayName: Build
+    inputs:
+      mavenPOMFile: 'pom.xml'
+      publishJUnitResults: true
+      testResultsFiles: '**/surefire-reports/TEST-*.xml'
+      jdkVersionOption: "1.8"
